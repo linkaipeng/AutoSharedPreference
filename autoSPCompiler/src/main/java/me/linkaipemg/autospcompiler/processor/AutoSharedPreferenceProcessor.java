@@ -16,6 +16,7 @@ import java.util.Set;
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Filer;
 import javax.annotation.processing.Messager;
+import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
@@ -23,7 +24,6 @@ import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
-import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
 
@@ -45,27 +45,31 @@ import me.linkaipemg.autospcompiler.generator.StringSetGetterSetterGenerator;
 @SupportedAnnotationTypes({"me.linkaipemg.autospannotation.AutoSharedPreferences", "me.linkaipemg.autospannotation.AutoGenerateField"})
 public class AutoSharedPreferenceProcessor extends AbstractProcessor {
 
+    private static final String PACKAGE_NAME = "me.linkaipeng.autosp";
+
     private Messager mMessager;
     private Elements mElements;
     private Filer mFiler;
 
     @Override
-    public boolean process(Set<? extends TypeElement> set, RoundEnvironment roundEnvironment) {
+    public synchronized void init(ProcessingEnvironment processingEnvironment) {
+        super.init(processingEnvironment);
         mMessager = processingEnv.getMessager();
         mElements = processingEnv.getElementUtils();
         mFiler = processingEnv.getFiler();
-
         generateConfigClass();
+    }
 
+    @Override
+    public boolean process(Set<? extends TypeElement> set, RoundEnvironment roundEnvironment) {
         TypeName contextTypeName = ClassName.get("android.content", "Context");
 
         for (Element element : roundEnvironment.getElementsAnnotatedWith(AutoSharedPreferences.class)) {
 
             String targetClassName = element.getSimpleName().toString();
-            PackageElement packageElement = mElements.getPackageOf(element);
             String spName = targetClassName + "SP";
 
-            TypeName currentClassTypeName = ClassName.get("me.linkaipeng.autosp", spName);
+            TypeName currentClassTypeName = ClassName.get(PACKAGE_NAME, spName);
 
             FieldSpec instanceField = FieldSpec.builder(currentClassTypeName, "sInstance", Modifier.PRIVATE, Modifier.STATIC)
                     .build();
@@ -100,7 +104,7 @@ public class AutoSharedPreferenceProcessor extends AbstractProcessor {
                     .addMethods(generateField(roundEnvironment))
                     .build();
 
-            JavaFile javaFile = JavaFile.builder("me.linkaipeng.autosp", infoClazz).build();
+            JavaFile javaFile = JavaFile.builder(PACKAGE_NAME, infoClazz).build();
             try {
                 javaFile.writeTo(mFiler);
             } catch (IOException e) {
@@ -127,10 +131,8 @@ public class AutoSharedPreferenceProcessor extends AbstractProcessor {
 
 
     private void generateConfigClass() {
-
-        String packageName = "me.linkaipeng.autosp";
         String className = "AutoSharedPreferenceConfig";
-        TypeName classTypeName = ClassName.get(packageName, className);
+        TypeName classTypeName = ClassName.get(PACKAGE_NAME, className);
 
         TypeName applicationType = ClassName.get("android.app", "Application");
         FieldSpec applicationContextField = FieldSpec.builder(applicationType, "mContext")
@@ -178,7 +180,7 @@ public class AutoSharedPreferenceProcessor extends AbstractProcessor {
                 .addMethod(initMethod)
                 .build();
 
-        JavaFile javaFile = JavaFile.builder(packageName, configClass)
+        JavaFile javaFile = JavaFile.builder(PACKAGE_NAME, configClass)
                 .build();
         try {
             javaFile.writeTo(mFiler);
