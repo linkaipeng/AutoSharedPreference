@@ -101,7 +101,8 @@ public class AutoSharedPreferenceProcessor extends AbstractProcessor {
                     .addField(sharedPreferencesField)
                     .addMethod(constructorMethod)
                     .addMethod(instanceMethod)
-                    .addMethods(generateField(roundEnvironment))
+                    .addMethods(generateGetterSetter(roundEnvironment))
+                    .addMethod(generateClear())
                     .build();
 
             JavaFile javaFile = JavaFile.builder(PACKAGE_NAME, infoClazz).build();
@@ -116,9 +117,10 @@ public class AutoSharedPreferenceProcessor extends AbstractProcessor {
     }
 
 
-    private List<MethodSpec> generateField(RoundEnvironment roundEnvironment) {
+    private List<MethodSpec> generateGetterSetter(RoundEnvironment roundEnvironment) {
         List<MethodSpec> methodSpecs = new ArrayList();
         for (Element element : roundEnvironment.getElementsAnnotatedWith(AutoGenerateField.class)) {
+            // getter setter
             methodSpecs.addAll(new StringGetterSetterGenerator().generateMethodSpec(element));
             methodSpecs.addAll(new IntGetterSetterGenerator().generateMethodSpec(element));
             methodSpecs.addAll(new LongGetterSetterGenerator().generateMethodSpec(element));
@@ -127,6 +129,14 @@ public class AutoSharedPreferenceProcessor extends AbstractProcessor {
             methodSpecs.addAll(new StringSetGetterSetterGenerator().generateMethodSpec(element));
         }
         return methodSpecs;
+    }
+
+    private MethodSpec generateClear() {
+        // clear
+        return MethodSpec.methodBuilder("clear")
+                .addModifiers(Modifier.PUBLIC)
+                .addStatement("mSharedPreferences.edit().clear().commit()")
+                .build();
     }
 
 
