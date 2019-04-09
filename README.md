@@ -1,0 +1,2 @@
+# AutoSharedPreference
+Generete SharedPreference
