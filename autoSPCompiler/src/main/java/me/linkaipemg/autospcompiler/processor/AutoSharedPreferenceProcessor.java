@@ -95,12 +95,27 @@ public class AutoSharedPreferenceProcessor extends AbstractProcessor {
                             currentClassTypeName)
                     .build();
 
+            MethodSpec getSharedPreferencesMethod = MethodSpec.methodBuilder("getSharedPreferences")
+                    .addModifiers(Modifier.PUBLIC)
+                    .addStatement("return mSharedPreferences")
+                    .returns(sharedPreferencesTypeName)
+                    .build();
+
+            MethodSpec containsMethod = MethodSpec.methodBuilder("contains")
+                    .addModifiers(Modifier.PUBLIC)
+                    .addStatement("return mSharedPreferences.contains(key)")
+                    .addParameter(TypeName.get(String.class), "key")
+                    .returns(TypeName.BOOLEAN)
+                    .build();
+
             TypeSpec infoClazz = TypeSpec.classBuilder(spName)
                     .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
                     .addField(instanceField)
                     .addField(sharedPreferencesField)
                     .addMethod(constructorMethod)
                     .addMethod(instanceMethod)
+                    .addMethod(getSharedPreferencesMethod)
+                    .addMethod(containsMethod)
                     .addMethods(generateGetterSetter(roundEnvironment))
                     .addMethod(generateClear())
                     .build();
