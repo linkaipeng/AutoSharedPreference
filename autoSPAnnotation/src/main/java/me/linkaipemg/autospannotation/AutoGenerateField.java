@@ -13,6 +13,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.SOURCE)
 public @interface AutoGenerateField {
 
+    String filedName() default "";
     String defaultStringValue() default "";
     int defaultIntValue() default 0;
     long defaultLongValue() default 0l;

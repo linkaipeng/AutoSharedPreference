@@ -11,7 +11,7 @@ import me.linkaipemg.autospannotation.AutoSharedPreferences;
 @AutoSharedPreferences
 public class AppConfig {
 
-    @AutoGenerateField(defaultStringValue = "ddd", commitType = AutoGenerateField.CommitType.APPLY)
+    @AutoGenerateField(filedName = "StudentName", defaultStringValue = "ddd", commitType = AutoGenerateField.CommitType.APPLY)
     private String name;
 
     @AutoGenerateField(defaultIntValue = -10)

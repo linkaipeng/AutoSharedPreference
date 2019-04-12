@@ -11,6 +11,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
 
 import me.linkaipemg.autospannotation.AutoGenerateField;
+import me.linkaipemg.autospcompiler.utils.TextUtils;
 
 /**
  * Created by linkaipeng on 2019/4/9.
@@ -23,22 +24,27 @@ public abstract class GetterSetterGenerator {
         if (!correctType(typeName)) {
             return getterSetterList;
         }
-        String name = element.getSimpleName().toString();
+        String methodName = element.getSimpleName().toString();
 
         try {
-            name = name.substring(0, 1).toUpperCase() + name.substring(1);
+            methodName = methodName.substring(0, 1).toUpperCase() + methodName.substring(1);
         } catch (Exception e) {
         }
 
-        MethodSpec.Builder getterBuilder = getBuilder("get", name).returns(typeName);
-        MethodSpec.Builder setterBuilder = getBuilder("set", name)
+        MethodSpec.Builder getterBuilder = getBuilder("get", methodName).returns(typeName);
+        MethodSpec.Builder setterBuilder = getBuilder("set", methodName)
                 .returns(TypeName.VOID)
                 .addParameter(typeName, "value");
-        AutoGenerateField field = element.getAnnotation(AutoGenerateField.class);
+        AutoGenerateField fieldAnnotation = element.getAnnotation(AutoGenerateField.class);
 
-        getterSetterList.add(getterBuilder.addStatement(generateGetterReturnCodeBlock(field, name)).build());
+        String fieldName = methodName;
+        if (!TextUtils.isEmpty(fieldAnnotation.filedName())) {
+            fieldName = fieldAnnotation.filedName();
+        }
+
+        getterSetterList.add(getterBuilder.addStatement(generateGetterReturnCodeBlock(fieldAnnotation, fieldName)).build());
         getterSetterList.add(setterBuilder
-                .addStatement("mSharedPreferences.edit().put$L($S, value)$L", getPutType(), name, commitType(field))
+                .addStatement("mSharedPreferences.edit().put$L($S, value)$L", getPutType(), fieldName, commitType(fieldAnnotation))
                 .build());
         return getterSetterList;
     }
