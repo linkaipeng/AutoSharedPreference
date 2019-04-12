@@ -13,4 +13,9 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.CLASS)
 public @interface AutoSharedPreferences {
 
+    /**
+     * Use android.content.Context MODE_XXX
+     * @return
+     */
+    int mode() default 0x0000;
 }

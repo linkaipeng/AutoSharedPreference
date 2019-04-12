@@ -79,10 +79,12 @@ public class AutoSharedPreferenceProcessor extends AbstractProcessor {
                     .addModifiers(Modifier.PRIVATE)
                     .build();
 
+            AutoSharedPreferences sharedPreferences = element.getAnnotation(AutoSharedPreferences.class);
+
             // 私有构造函数
             MethodSpec constructorMethod = MethodSpec.constructorBuilder()
                     .addModifiers(Modifier.PRIVATE)
-                    .addStatement("mSharedPreferences = AutoSharedPreferenceConfig.getInstance().getContext().getSharedPreferences($S, $T.MODE_PRIVATE)", spName, contextTypeName)
+                    .addStatement("mSharedPreferences = AutoSharedPreferenceConfig.getInstance().getContext().getSharedPreferences($S, $L)", spName, sharedPreferences.mode())
                     .build();
 
             MethodSpec instanceMethod = MethodSpec.methodBuilder("getInstance")
