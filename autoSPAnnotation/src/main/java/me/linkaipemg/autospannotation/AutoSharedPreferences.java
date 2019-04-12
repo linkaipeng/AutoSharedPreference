@@ -18,4 +18,10 @@ public @interface AutoSharedPreferences {
      * @return
      */
     int mode() default 0x0000;
+
+    /**
+     * The file name configuration. Returns ClassName+"SP" if set empty or null.
+     * @return
+     */
+    String name() default "";
 }

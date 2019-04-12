@@ -35,6 +35,7 @@ import me.linkaipemg.autospcompiler.generator.IntGetterSetterGenerator;
 import me.linkaipemg.autospcompiler.generator.LongGetterSetterGenerator;
 import me.linkaipemg.autospcompiler.generator.StringGetterSetterGenerator;
 import me.linkaipemg.autospcompiler.generator.StringSetGetterSetterGenerator;
+import me.linkaipemg.autospcompiler.utils.TextUtils;
 
 /**
  * Created by linkaipeng on 2019/4/4.
@@ -62,13 +63,16 @@ public class AutoSharedPreferenceProcessor extends AbstractProcessor {
 
     @Override
     public boolean process(Set<? extends TypeElement> set, RoundEnvironment roundEnvironment) {
-        TypeName contextTypeName = ClassName.get("android.content", "Context");
 
         for (Element element : roundEnvironment.getElementsAnnotatedWith(AutoSharedPreferences.class)) {
+            AutoSharedPreferences sharedPreferencesAnnotation = element.getAnnotation(AutoSharedPreferences.class);
 
             String targetClassName = element.getSimpleName().toString();
-            String spName = targetClassName + "SP";
 
+            String spName = targetClassName + "SP";
+            if (!TextUtils.isEmpty(sharedPreferencesAnnotation.name())) {
+                spName = sharedPreferencesAnnotation.name();
+            }
             TypeName currentClassTypeName = ClassName.get(PACKAGE_NAME, spName);
 
             FieldSpec instanceField = FieldSpec.builder(currentClassTypeName, "sInstance", Modifier.PRIVATE, Modifier.STATIC)
@@ -79,12 +83,11 @@ public class AutoSharedPreferenceProcessor extends AbstractProcessor {
                     .addModifiers(Modifier.PRIVATE)
                     .build();
 
-            AutoSharedPreferences sharedPreferences = element.getAnnotation(AutoSharedPreferences.class);
 
             // 私有构造函数
             MethodSpec constructorMethod = MethodSpec.constructorBuilder()
                     .addModifiers(Modifier.PRIVATE)
-                    .addStatement("mSharedPreferences = AutoSharedPreferenceConfig.getInstance().getContext().getSharedPreferences($S, $L)", spName, sharedPreferences.mode())
+                    .addStatement("mSharedPreferences = AutoSharedPreferenceConfig.getInstance().getContext().getSharedPreferences($S, $L)", spName, sharedPreferencesAnnotation.mode())
                     .build();
 
             MethodSpec instanceMethod = MethodSpec.methodBuilder("getInstance")
