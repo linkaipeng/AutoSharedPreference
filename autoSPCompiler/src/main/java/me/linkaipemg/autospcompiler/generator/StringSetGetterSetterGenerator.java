@@ -25,7 +25,7 @@ public class StringSetGetterSetterGenerator extends GetterSetterGenerator {
     }
 
     @Override
-    protected CodeBlock generateSetterCodeBlock(String name) {
-        return CodeBlock.of("mSharedPreferences.edit().putStringSet($S, value).commit()", name);
+    protected String getPutType() {
+        return "StringSet";
     }
 }

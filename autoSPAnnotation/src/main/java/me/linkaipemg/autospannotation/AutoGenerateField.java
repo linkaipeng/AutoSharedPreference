@@ -18,5 +18,9 @@ public @interface AutoGenerateField {
     long defaultLongValue() default 0l;
     float defaultFloatValue() default 0f;
     boolean defaultBooleanValue() default false;
+    CommitType commitType() default CommitType.COMMIT;
 
+    enum CommitType {
+        COMMIT, APPLY
+    }
 }

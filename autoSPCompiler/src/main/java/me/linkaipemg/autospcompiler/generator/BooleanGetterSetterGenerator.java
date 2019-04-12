@@ -22,7 +22,7 @@ public class BooleanGetterSetterGenerator extends GetterSetterGenerator {
     }
 
     @Override
-    protected CodeBlock generateSetterCodeBlock(String name) {
-        return CodeBlock.of("mSharedPreferences.edit().putBoolean($S, value).commit()", name);
+    protected String getPutType() {
+        return "Boolean";
     }
 }

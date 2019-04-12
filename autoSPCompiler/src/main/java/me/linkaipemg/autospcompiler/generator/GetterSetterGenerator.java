@@ -37,7 +37,9 @@ public abstract class GetterSetterGenerator {
         AutoGenerateField field = element.getAnnotation(AutoGenerateField.class);
 
         getterSetterList.add(getterBuilder.addStatement(generateGetterReturnCodeBlock(field, name)).build());
-        getterSetterList.add(setterBuilder.addStatement(generateSetterCodeBlock(name)).build());
+        getterSetterList.add(setterBuilder
+                .addStatement("mSharedPreferences.edit().put$L($S, value)$L", getPutType(), name, commitType(field))
+                .build());
         return getterSetterList;
     }
 
@@ -46,7 +48,15 @@ public abstract class GetterSetterGenerator {
                 .addModifiers(Modifier.PUBLIC);
     }
 
+    protected String commitType(AutoGenerateField field) {
+        if (field.commitType() == AutoGenerateField.CommitType.APPLY) {
+            return ".apply()";
+        } else {
+            return ".commit()";
+        }
+    }
+
     protected abstract boolean correctType(TypeName typeName);
     protected abstract CodeBlock generateGetterReturnCodeBlock(AutoGenerateField field, String name);
-    protected abstract CodeBlock generateSetterCodeBlock(String name);
+    protected abstract String getPutType();
 }

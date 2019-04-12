@@ -11,13 +11,13 @@ import me.linkaipemg.autospannotation.AutoSharedPreferences;
 @AutoSharedPreferences
 public class AppConfig {
 
-    @AutoGenerateField(defaultStringValue = "ddd")
+    @AutoGenerateField(defaultStringValue = "ddd", commitType = AutoGenerateField.CommitType.APPLY)
     private String name;
 
     @AutoGenerateField(defaultIntValue = -10)
     private int count;
 
-    @AutoGenerateField(defaultLongValue = 90l)
+    @AutoGenerateField(defaultLongValue = 90l, commitType = AutoGenerateField.CommitType.COMMIT)
     private long startTime;
 
     @AutoGenerateField(defaultBooleanValue = true)
