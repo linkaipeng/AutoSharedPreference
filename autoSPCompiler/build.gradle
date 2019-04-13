@@ -1,4 +1,5 @@
 apply plugin: 'java-library'
+apply plugin: 'com.novoda.bintray-release'
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -10,3 +11,13 @@ dependencies {
 
 sourceCompatibility = "7"
 targetCompatibility = "7"
+
+
+publish {
+    userOrg = 'linkaipeng'
+    groupId = 'me.linkaipeng'
+    artifactId = 'autoSPAnnotation'
+    publishVersion = '1.0.0'
+    desc = ''
+    website = 'https://github.com/linkaipeng/AutoSharedPreference'
+}
