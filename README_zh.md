@@ -1,21 +1,18 @@
-
-[中文文档](https://github.com/linkaipeng/AutoSharedPreference/blob/master/README_zh.md)
-
-
 # AutoSharedPreference
 
-`AutoSharedPreference` is an automatic generation of `SharedPreference` by adding **Annotations** to class.
+`AutoSharedPreference` 是一个可以通过给类成员添加**注解**来自动生成 `SharedPreference`。
 
 
-### Usage
 
-#### build.gradle
+### 使用方式
+
+#### module 的 build.gradle 使用
 
 ```
 
 ```
 
-#### Add annotations to the class
+#### 类添加注解
 
 ```
 @AutoSharedPreferences(mode = Context.MODE_PRIVATE)
@@ -42,10 +39,10 @@ public class AppConfig {
 
 ```
 
-- `mode` can use the value in `Context`；
-- If you want to customize the `SharedPreferences` filename, you can use the `name` attribute.。
+- `@AutoSharedPreferences` 可以添加`mode`，`mode` 的值跟原生写法一样，用 `Context` 中的值；
+- 如果你想自定义 `SharedPreferences` 文件名，可以用 `name` 属性。
 
-#### Add annotations to the field
+#### 成员添加注解
 
 ```
 @AutoGenerateField(filedName = "StudentName", defaultStringValue = "ddd", commitType = AutoGenerateField.CommitType.APPLY)
@@ -53,12 +50,12 @@ private String name;
 
 ```
 
-- `filedName` is used to define the name of `key` stored in `SharedPreferences`. The default value is the field name；
-- `defaultStringValue`, `defaultIntValue` are used to set default values；
-- `commitType` is the save mode, you can choose `commit` or `apply`, the default value is `commit`.
+- `filedName` 用于定义 `SharedPreferences` 中存储 `key` 的名字，默认值为变量名；
+- `defaultStringValue`、 `defaultIntValue` 等为指定各种类型的默认值；
+- `commitType` 为保存方式，有 `commit` 和 `apply`，默认值为 `commit`.
 
 
-#### You can view the generated code in `app/build/generated`
+#### 生成代码可在 `app/build/generated` 路径下查看
 
 ```
 public final class AppConfigSP {
