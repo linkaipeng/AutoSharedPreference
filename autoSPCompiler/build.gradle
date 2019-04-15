@@ -6,7 +6,7 @@ dependencies {
 
     implementation 'com.google.auto.service:auto-service:1.0-rc5'
     implementation 'com.squareup:javapoet:1.11.1'
-    implementation project(':autoSPAnnotation')
+    implementation 'me.linkaipeng:autoSPAnnotation:1.0.0'
 }
 
 sourceCompatibility = "7"
@@ -16,7 +16,7 @@ targetCompatibility = "7"
 publish {
     userOrg = 'linkaipeng'
     groupId = 'me.linkaipeng'
-    artifactId = 'autoSPAnnotation'
+    artifactId = 'autoSPCompiler'
     publishVersion = '1.0.0'
     desc = ''
     website = 'https://github.com/linkaipeng/AutoSharedPreference'
