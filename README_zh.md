@@ -9,7 +9,14 @@
 #### module 的 build.gradle 使用
 
 ```
+implementation 'me.linkaipeng:autoSPAnnotation:1.0.0'
+annotationProcessor 'me.linkaipeng:autoSPCompiler:1.0.0'
+```
 
+### 初始化
+
+```
+AutoSharedPreferenceConfig.getInstance().init(this);
 ```
 
 #### 类添加注解

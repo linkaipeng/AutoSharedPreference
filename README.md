@@ -12,7 +12,14 @@
 #### build.gradle
 
 ```
+implementation 'me.linkaipeng:autoSPAnnotation:1.0.0'
+annotationProcessor 'me.linkaipeng:autoSPCompiler:1.0.0'
+```
 
+### Initialize
+
+```
+AutoSharedPreferenceConfig.getInstance().init(this);
 ```
 
 #### Add annotations to the class
